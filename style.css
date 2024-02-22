@@ -139,10 +139,12 @@ h3 span {
   color: rgba(128, 128, 128, 0.555);
   margin-top: 10px;
 }
-#time {
+#timeDécompte {
+  user-select: none;
+  color: rgba(128, 128, 128, 0.555);
   position: absolute;
   left: 50%;
-  top: 50%;
+  top: 20%;
   font-size: 6rem;
   transform: translate(-50%, -50%);
 }

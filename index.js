@@ -6,6 +6,7 @@ let noClick = 0;
 let accueilInterval;
 let normalInterval;
 let time = 0;
+let décompte = 5;
 let pseudo;
 const ring = () => {
   const audio = new Audio();
@@ -33,7 +34,7 @@ validPseudo.addEventListener("click", (e) => {
     choisePseudo.value = "";
   } else {
     accueilPseudo.style.opacity = "0";
-    accueilPseudo.style.top = "-100px";
+    accueilPseudo.style.top = "-250px";
     accueilPseudo.style.transition = "2s";
     welcome.style.opacity = "1";
     welcome.style.transition = "4s";
@@ -55,13 +56,15 @@ const makeBubble = () => {
   bubble.style.setProperty("--left", Math.random() * 100 + "vw");
 
   bubble.addEventListener("click", () => {
-    click++;
+    if (time > 0) {
+      click++;
+    }
     n1.textContent = click;
     ring();
     bubble.remove();
   });
   bubble.addEventListener("animationend", () => {
-    if (time >= 120) {
+    if (time > 0) {
       noClick++;
     }
     n2.textContent = noClick;
@@ -69,19 +72,52 @@ const makeBubble = () => {
   });
 };
 
-btnWelcome.addEventListener("click", () => {
-  // bubble.remove();
+const ready = () => {
+  readyInterval = setInterval(() => {
+    timeDécompte.innerHTML = `<p>${décompte}</p>`;
+    if (décompte > 0) {
+      décompte--;
+      // ready();
+    } else if (décompte === 0) {
+      timeDécompte.innerHTML = "GO !";
+      décompte--;
+    } else {
+      timeDécompte.innerHTML = "";
+      clearInterval(readyInterval);
+      timeGame();
+    }
+  }, 1000);
+};
+const timeGame = () => {
   time = 120;
+  normalInterval = setInterval(makeBubble, 1000);
+  gameInterval = setInterval(() => {
+    let timeMinutes = Math.floor(time / 60);
+    let timeSeconds = time % 60;
+    timeDécompte.innerHTML = `${timeMinutes} : ${
+      timeSeconds < 10 ? "0" + timeSeconds : timeSeconds
+    }`;
+    if (time > 0) {
+      time--;
+    } else {
+      timeDécompte.innerHTML = "Fini";
+      clearInterval(normalInterval);
+      clearInterval(gameInterval);
+    }
+  }, 1000);
+};
+
+btnWelcome.addEventListener("click", () => {
   clearInterval(accueilInterval);
-  setTimeout(() => {
-    normalInterval = setInterval(makeBubble, 1000);
-  }, 5000);
+  // setTimeout(() => {
+  // }, 5000);
+  ready();
   section.style.filter = "blur(0px)";
   welcome.style.opacity = "0";
-  welcome.style.top = "-100px";
+  welcome.style.top = "-250px";
   welcome.style.transition = "1s";
 });
 
 accueilInterval = setInterval(makeBubble, 4000);
 
-// continuer avec les comptes à rebours
+// continuer avec affichage score
