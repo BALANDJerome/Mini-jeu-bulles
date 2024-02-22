@@ -6,8 +6,19 @@ let noClick = 0;
 let accueilInterval;
 let normalInterval;
 let time = 0;
-let décompte = 5;
+let décompte = 3;
 let pseudo;
+let data = [];
+
+// Fonctions
+
+const stockage = () => {
+  if (localStorage.Bubble) {
+    dataJSON = localStorage.getItem("Bubble");
+    data = dataJSON && JSON.parse(dataJSON);
+  }
+};
+
 const ring = () => {
   const audio = new Audio();
   audio.src = "./assets/bubble.mp3";
@@ -20,27 +31,6 @@ const color = () => {
   colorB = Math.floor(Math.random() * 200);
   colorRGB = `rgb(${colorR},${colorG},${colorB})`;
 };
-
-validPseudo.addEventListener("click", (e) => {
-  e.preventDefault();
-  pseudo = choisePseudo.value;
-  if (pseudo.length < 3 || pseudo.length > 20) {
-    alert("Le Pseudo doit être compris entre 3 et 20 caractères");
-    choisePseudo.value = "";
-  } else if (!pseudo.match(/^[a-zA-Z0-9_.-]*$/)) {
-    alert(
-      "Le Pseudo ne doit pas contenir de caractères spéciaux sauf ( _ et - )"
-    );
-    choisePseudo.value = "";
-  } else {
-    accueilPseudo.style.opacity = "0";
-    accueilPseudo.style.top = "-250px";
-    accueilPseudo.style.transition = "2s";
-    welcome.style.opacity = "1";
-    welcome.style.transition = "4s";
-    welcomePseudo.innerText = pseudo;
-  }
-});
 
 const makeBubble = () => {
   const bubble = document.createElement("span");
@@ -77,7 +67,6 @@ const ready = () => {
     timeDécompte.innerHTML = `<p>${décompte}</p>`;
     if (décompte > 0) {
       décompte--;
-      // ready();
     } else if (décompte === 0) {
       timeDécompte.innerHTML = "GO !";
       décompte--;
@@ -85,9 +74,11 @@ const ready = () => {
       timeDécompte.innerHTML = "";
       clearInterval(readyInterval);
       timeGame();
+      décompte = 3;
     }
   }, 1000);
 };
+
 const timeGame = () => {
   time = 120;
   normalInterval = setInterval(makeBubble, 1000);
@@ -100,17 +91,59 @@ const timeGame = () => {
     if (time > 0) {
       time--;
     } else {
-      timeDécompte.innerHTML = "Fini";
+      timeDécompte.innerHTML = "Terminé";
+      setTimeout(() => {
+        timeDécompte.innerHTML = "";
+        data.push({ pseudo, click, noClick });
+        data.sort((a, b) => b.click - a.click);
+        displayScores();
+      }, 2000);
       clearInterval(normalInterval);
       clearInterval(gameInterval);
     }
   }, 1000);
 };
 
+const displayScores = () => {
+  if (data.length > 5) {
+    data.pop();
+  }
+  end.style.top = "50%";
+  section.style.filter = "blur(4px)";
+  endScores.innerHTML = data
+    .map(
+      (user) =>
+        `<li><p>${user.pseudo}<span> : ${user.click} touchées et ${user.noClick} loupées.</span></p></li>`
+    )
+    .join("");
+  localStorage.setItem("Bubble", JSON.stringify(data));
+};
+
+// Evenements
+
+validPseudo.addEventListener("click", (e) => {
+  e.preventDefault();
+  pseudo = choisePseudo.value;
+  if (pseudo.length < 3 || pseudo.length > 20) {
+    alert("Le Pseudo doit être compris entre 3 et 20 caractères");
+    choisePseudo.value = "";
+  } else if (!pseudo.match(/^[a-zA-Z0-9_.-]*$/)) {
+    alert(
+      "Le Pseudo ne doit pas contenir de caractères spéciaux sauf ( _ et - )"
+    );
+    choisePseudo.value = "";
+  } else {
+    accueilPseudo.style.opacity = "0";
+    accueilPseudo.style.top = "-250px";
+    accueilPseudo.style.transition = "2s";
+    welcome.style.opacity = "1";
+    welcome.style.transition = "4s";
+    welcomeH1.innerHTML = `Bienvenue<br><span id="welcomePseudo">${pseudo}</span>`;
+  }
+});
+
 btnWelcome.addEventListener("click", () => {
   clearInterval(accueilInterval);
-  // setTimeout(() => {
-  // }, 5000);
   ready();
   section.style.filter = "blur(0px)";
   welcome.style.opacity = "0";
@@ -118,6 +151,20 @@ btnWelcome.addEventListener("click", () => {
   welcome.style.transition = "1s";
 });
 
-accueilInterval = setInterval(makeBubble, 4000);
+btnReload.addEventListener("click", () => {
+  click = 0;
+  noClick = 0;
+  n1.textContent = click;
+  n2.textContent = noClick;
+  end.style.top = "-250px";
+  welcome.style.top = "50%";
+  welcome.style.opacity = "1";
+  welcome.style.transition = "4s";
+  welcomeH1.innerHTML = `On y retourne <span id="welcomePseudo">${pseudo}</span> ?`;
+  accueilInterval = setInterval(makeBubble, 4100);
+});
 
-// continuer avec affichage score
+accueilInterval = setInterval(makeBubble, 4100);
+window.addEventListener("load", stockage());
+
+// continuer avec niveau de difficulté

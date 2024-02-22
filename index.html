@@ -12,13 +12,13 @@
 
 <body>
   <div id="accueilPseudo">
-    <label for="choisePseudo">Quel est ton Pseudo :</label>
+    <label for="choisePseudo">Choisis ton Pseudo :</label>
     <input type="text" id="choisePseudo" placeholder="Pseudo">
     <input type="submit" id="validPseudo" value="Valider">
   </div>
   <header id="welcome">
-    <h1>Bienvenue<br><span id="welcomePseudo"></span></h1>
-    <h2>Ce mini jeu consiste à éclater un maximum de bulles dans un temps impartit</h2>
+    <h1 id="welcomeH1"><br><span id="welcomePseudo"></span></h1>
+    <h2>Ce mini jeu consiste à éclater un maximum de bulles dans un temps impartit.</h2>
     <button id="btnWelcome">Clique ici pour commencer</button>
   </header>
   <section>
@@ -26,6 +26,11 @@
     <h3><i class="fa-solid fa-face-frown"></i><span id="n2">0</span></h3>
   </section>
   <div id="timeDécompte"></div>
+  <div id="end">
+    <h4>Scores :</h4>
+    <ul id="endScores"></ul>
+    <button id="btnReload">réessayer</button>
+  </div>
 
   <script src="./index.js"></script>
 </body>
