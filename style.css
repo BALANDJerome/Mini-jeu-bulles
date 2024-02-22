@@ -82,6 +82,42 @@ h2 {
   font-weight: normal;
   text-align: center;
 }
+.difficultContainer {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+}
+.difficultContainer input {
+  display: none;
+}
+.difficultContainer label {
+  font-weight: bold;
+  letter-spacing: 2px;
+  color: rgb(36, 207, 165);
+  padding: 20px;
+  box-shadow: 0 0 20px 0 black;
+  border-radius: 300px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: 0.3s;
+}
+.difficultContainer input:checked + label {
+  background: rgb(146, 117, 56);
+  text-shadow: 0 0 5px black;
+  animation: difficult 3s infinite linear;
+}
+@keyframes difficult {
+  33% {
+    transform: rotate(20deg);
+  }
+  67% {
+    transform: rotate(-20deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
 button {
   font-size: 1.5rem;
   text-transform: uppercase;
@@ -108,7 +144,7 @@ section {
 .bubble {
   position: absolute;
   border-radius: 300px;
-  top: 1000px;
+  top: 1200px;
   animation: animbubble 5s forwards linear;
   transform: translate(-50%, -50%);
   filter: hue-rotate(0deg);

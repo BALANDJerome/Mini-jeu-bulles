@@ -16,6 +16,7 @@ const stockage = () => {
   if (localStorage.Bubble) {
     dataJSON = localStorage.getItem("Bubble");
     data = dataJSON && JSON.parse(dataJSON);
+    choisePseudo.value = data[0].pseudo;
   }
 };
 
