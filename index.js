@@ -4,10 +4,11 @@ let colorRGB;
 let click = 0;
 let noClick = 0;
 let accueilInterval;
-let normalInterval;
+let easyInterval;
 let time = 0;
 let décompte = 3;
 let pseudo;
+let level = "";
 let data = [];
 
 // Fonctions
@@ -38,13 +39,23 @@ const makeBubble = () => {
   bubble.classList.add("bubble");
   document.body.appendChild(bubble);
 
-  let size = Math.random() * 100 + 100 + "px";
+  let size;
+  if (window.matchMedia("(min-width: 800px)").matches) {
+    size = Math.random() * 100 + 100 + "px";
+  } else {
+    size = Math.random() * 100 + 50 + "px";
+  }
   bubble.style.left = Math.random() * 100 + "vw";
   bubble.style.width = size;
   bubble.style.height = size;
   color();
   bubble.style.background = colorRGB;
   bubble.style.setProperty("--left", Math.random() * 100 + "vw");
+  if (extreme.checked || normal.checked) {
+    bubble.style.animation = "animbubble 3s forwards linear";
+  } else {
+    bubble.style.animation = "animbubble 5s forwards linear";
+  }
 
   bubble.addEventListener("click", () => {
     if (time > 0) {
@@ -82,7 +93,16 @@ const ready = () => {
 
 const timeGame = () => {
   time = 120;
-  normalInterval = setInterval(makeBubble, 1000);
+  if (facile.checked) {
+    easyInterval = setInterval(makeBubble, 1000);
+    level = "Facile";
+  } else if (normal.checked) {
+    easyInterval = setInterval(makeBubble, 600);
+    level = "Normal";
+  } else {
+    easyInterval = setInterval(makeBubble, 300);
+    level = "Extrême";
+  }
   gameInterval = setInterval(() => {
     let timeMinutes = Math.floor(time / 60);
     let timeSeconds = time % 60;
@@ -95,26 +115,30 @@ const timeGame = () => {
       timeDécompte.innerHTML = "Terminé";
       setTimeout(() => {
         timeDécompte.innerHTML = "";
-        data.push({ pseudo, click, noClick });
+        if (data.length > 5) {
+          data.pop();
+        }
+        data.push({ pseudo, click, noClick, level });
         data.sort((a, b) => b.click - a.click);
         displayScores();
       }, 2000);
-      clearInterval(normalInterval);
+      clearInterval(easyInterval);
       clearInterval(gameInterval);
     }
   }, 1000);
 };
 
 const displayScores = () => {
-  if (data.length > 5) {
-    data.pop();
-  }
   end.style.top = "50%";
-  section.style.filter = "blur(4px)";
+  section.style.filter = "blur(2px)";
   endScores.innerHTML = data
     .map(
       (user) =>
-        `<li><p>${user.pseudo}<span> : ${user.click} touchées et ${user.noClick} loupées.</span></p></li>`
+        `<li><p>${user.pseudo}<span> : ${user.click} ${
+          user.click > 1 ? "touchées" : "touchée"
+        } et ${user.noClick} ${user.noClick > 1 ? "loupées" : "loupée"}. <em>${
+          user.level
+        }</em></span></p></li>`
     )
     .join("");
   localStorage.setItem("Bubble", JSON.stringify(data));
@@ -155,6 +179,7 @@ btnWelcome.addEventListener("click", () => {
 btnReload.addEventListener("click", () => {
   click = 0;
   noClick = 0;
+  // level = "";
   n1.textContent = click;
   n2.textContent = noClick;
   end.style.top = "-250px";
