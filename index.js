@@ -9,6 +9,7 @@ let time = 0;
 let décompte = 3;
 let pseudo;
 let level = "";
+let lastGame = true;
 let data = [];
 
 // Fonctions
@@ -118,7 +119,8 @@ const timeGame = () => {
         if (data.length > 5) {
           data.pop();
         }
-        data.push({ pseudo, click, noClick, level });
+        // lastGame = true;
+        data.push({ pseudo, click, noClick, level, lastGame });
         data.sort((a, b) => b.click - a.click);
         displayScores();
       }, 2000);
@@ -134,13 +136,18 @@ const displayScores = () => {
   endScores.innerHTML = data
     .map(
       (user) =>
-        `<li><p>${user.pseudo}<span> : ${user.click} ${
-          user.click > 1 ? "touchées" : "touchée"
-        } et ${user.noClick} ${user.noClick > 1 ? "loupées" : "loupée"}. <em>${
+        `<li><p>${user.lastGame ? "<i>&#10132;</i>" : ""} ${
+          user.pseudo
+        }<span> : ${user.click} ${user.click > 1 ? "touchées" : "touchée"} et ${
+          user.noClick
+        } ${user.noClick > 1 ? "loupées" : "loupée"}. <em>${
           user.level
         }</em></span></p></li>`
     )
     .join("");
+  for (i = 0; i < data.length; i++) {
+    data[i].lastGame = false;
+  }
   localStorage.setItem("Bubble", JSON.stringify(data));
 };
 
@@ -179,7 +186,6 @@ btnWelcome.addEventListener("click", () => {
 btnReload.addEventListener("click", () => {
   click = 0;
   noClick = 0;
-  // level = "";
   n1.textContent = click;
   n2.textContent = noClick;
   end.style.top = "-250px";
@@ -192,5 +198,3 @@ btnReload.addEventListener("click", () => {
 
 accueilInterval = setInterval(makeBubble, 4100);
 window.addEventListener("load", stockage());
-
-// continuer avec niveau de difficulté

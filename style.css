@@ -51,7 +51,7 @@ body {
 #welcome {
   background: white;
   position: absolute;
-  height: 500px;
+  min-height: 500px;
   width: 90vw;
   max-width: 1000px;
   left: 50%;
@@ -216,6 +216,9 @@ ul p {
   text-shadow: 2px 2px 8px #b3b171;
   font-size: 1.5rem;
 }
+ul i {
+  color: rgb(190, 30, 30);
+}
 ul span {
   color: rgb(167, 157, 23);
   text-shadow: none;
@@ -223,6 +226,11 @@ ul span {
 span em {
   color: rgb(190, 30, 30);
   font-size: 1rem;
+}
+@media screen and (max-width: 970px) {
+  #timeDécompte {
+    top: 35%;
+  }
 }
 @media screen and (max-width: 790px) {
   #accueilPseudo {
@@ -239,15 +247,21 @@ span em {
   button {
     font-size: 1rem;
   }
-  #timeDécompte {
-    top: 35%;
-  }
 }
 @media screen and (max-width: 550px) {
   body {
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
+  }
+  .difficultContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+  .difficultContainer label {
+    margin: 10px auto;
+    font-size: 0.8rem;
+    padding: 12px;
   }
   h3 {
     font-size: 3rem;
