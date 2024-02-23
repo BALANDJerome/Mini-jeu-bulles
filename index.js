@@ -119,7 +119,6 @@ const timeGame = () => {
         if (data.length > 5) {
           data.pop();
         }
-        // lastGame = true;
         data.push({ pseudo, click, noClick, level, lastGame });
         data.sort((a, b) => b.click - a.click);
         displayScores();
@@ -169,9 +168,18 @@ validPseudo.addEventListener("click", (e) => {
     accueilPseudo.style.top = "-250px";
     accueilPseudo.style.transition = "2s";
     welcome.style.opacity = "1";
+    welcome.style.top = "50%";
     welcome.style.transition = "4s";
-    welcomeH1.innerHTML = `Bienvenue<br><span id="welcomePseudo">${pseudo}</span>`;
+    welcomeH1.innerText = `Bienvenue`;
+    welcomePseudo.innerText = `${pseudo}`;
+    rewritePseudo.innerHTML = `<i>&#9997;</i>`;
   }
+});
+rewritePseudo.addEventListener("click", () => {
+  accueilPseudo.style.opacity = "1";
+  accueilPseudo.style.top = "50%";
+  welcome.style.top = "-250px";
+  welcome.style.opacity = "0";
 });
 
 btnWelcome.addEventListener("click", () => {
@@ -192,7 +200,9 @@ btnReload.addEventListener("click", () => {
   welcome.style.top = "50%";
   welcome.style.opacity = "1";
   welcome.style.transition = "4s";
-  welcomeH1.innerHTML = `On y retourne <span id="welcomePseudo">${pseudo}</span> ?`;
+  welcomeH1.innerText = `On y retourne`;
+  welcomePseudo.innerText = `${pseudo}` + " ?";
+  rewritePseudo.innerHTML = `<i>&#9997;</i>`;
   accueilInterval = setInterval(makeBubble, 4100);
 });
 
